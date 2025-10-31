@@ -5,7 +5,9 @@ class Organization(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # created_by = 
+    created_by = models.ForeignKey(
+        'auth.User', null=True, blank=True, on_delete=models.SET_NULL, related_name='organizations'
+    )
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.created_by if self.created_by else 'No User'}"
