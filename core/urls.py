@@ -16,10 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def home(request):
-    return HttpResponse("Welcome to Task Management System")
+    return render(request, 'home.html')
 
 urlpatterns = [
     path('', home, name='home'),
