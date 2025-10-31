@@ -10,4 +10,4 @@ class Organization(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name} {self.created_by if self.created_by else 'No User'}"
+        return self.name

@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Organization
@@ -18,6 +18,23 @@ class OrganizationListView(LoginRequiredMixin, ListView):
     model = Organization
     template_name = 'organization/list.html'
     context_object_name = 'organizations'
+    
+    def get_queryset(self):
+        return Organization.objects.filter(created_by=self.request.user)
+
+class OrganizationDetailView(LoginRequiredMixin, DetailView):
+    model = Organization
+    template_name = 'organization/detail.html'
+    context_object_name = 'organization'
+    
+    def get_queryset(self):
+        return Organization.objects.filter(created_by=self.request.user)
+
+class OrganizationUpdateView(LoginRequiredMixin, UpdateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name = 'organization/update.html'
+    success_url = reverse_lazy('organization_list')
     
     def get_queryset(self):
         return Organization.objects.filter(created_by=self.request.user)

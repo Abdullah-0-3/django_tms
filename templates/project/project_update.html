@@ -6,12 +6,20 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm">
-            <div class="card-header bg-warning text-dark">
+            <div class="card-header bg-secondary text-white">
                 <h4 class="mb-0">
                     <i class="fas fa-edit me-2"></i>Edit Project
                 </h4>
             </div>
             <div class="card-body p-4">
+                <!-- Current Organization Display -->
+                <div class="mb-3">
+                    <label class="form-label">Current Organization</label>
+                    <div class="alert alert-info">
+                        <i class="fas fa-building me-2"></i>{{ project.organization.name }}
+                    </div>
+                </div>
+
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
@@ -25,17 +33,6 @@
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.organization.id_for_label }}" class="form-label">Organization</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-building"></i></span>
-                            {{ form.organization }}
-                        </div>
-                        {% if form.organization.errors %}
-                            <div class="text-danger small mt-1">{{ form.organization.errors.0 }}</div>
-                        {% endif %}
-                    </div>
-
                     <div class="mb-4">
                         <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
                         <textarea name="description" class="form-control" id="{{ form.description.id_for_label }}" rows="4" required>{{ project.description }}</textarea>
@@ -45,8 +42,28 @@
                         <div class="form-text">Update the project description as needed.</div>
                     </div>
 
+                    <hr>
+
+                    <!-- Change Organization Section -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-exchange-alt me-2"></i>Change Organization
+                        </h6>
+                        <div class="mb-3">
+                            <label for="{{ form.organization.id_for_label }}" class="form-label">Move to Organization</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                {{ form.organization }}
+                            </div>
+                            {% if form.organization.errors %}
+                                <div class="text-danger small mt-1">{{ form.organization.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text">Select a different organization to move this project to.</div>
+                        </div>
+                    </div>
+
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-warning">
+                        <button type="submit" class="btn btn-secondary">
                             <i class="fas fa-save me-2"></i>Update Project
                         </button>
                         <a href="{% url 'project_detail' project.pk %}" class="btn btn-outline-secondary">

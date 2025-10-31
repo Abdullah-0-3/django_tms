@@ -14,6 +14,9 @@ class ProjectForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        hide_organization = kwargs.pop('hide_organization', False)
         super().__init__(*args, **kwargs)
         if user:
             self.fields['organization'].queryset = Organization.objects.filter(created_by=user)
+        if hide_organization:
+            del self.fields['organization']
