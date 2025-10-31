@@ -18,3 +18,6 @@ class OrganizationListView(LoginRequiredMixin, ListView):
     model = Organization
     template_name = 'organization/list.html'
     context_object_name = 'organizations'
+    
+    def get_queryset(self):
+        return Organization.objects.filter(created_by=self.request.user)
