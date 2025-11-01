@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Comment - {{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>Add Comment
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <!-- Task Context -->
+                <div class="alert alert-info mb-4">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-tasks me-2"></i>{{ task.title }}
+                    </h6>
+                    <p class="mb-0">{{ task.description|truncatewords:20|default:"No description provided." }}</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Comment Title</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-comment"></i></span>
+                            <input type="text" name="title" class="form-control" id="{{ form.title.id_for_label }}" required>
+                        </div>
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Comment</label>
+                        <textarea name="description" class="form-control" id="{{ form.description.id_for_label }}" rows="4" placeholder="Share your thoughts, updates, or questions about this task..."></textarea>
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">Provide feedback, updates, or ask questions about this task.</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Add Comment
+                        </button>
+                        <a href="{% url 'task_detail' task.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Comment Guidelines -->
+        <div class="card mt-4 border-success">
+            <div class="card-body">
+                <h6 class="card-title text-success">
+                    <i class="fas fa-lightbulb me-2"></i>Comment Guidelines
+                </h6>
+                <ul class="small text-muted mb-0">
+                    <li>Be constructive and helpful in your feedback</li>
+                    <li>Ask specific questions if you need clarification</li>
+                    <li>Share progress updates and blockers</li>
+                    <li>Keep comments relevant to the task</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

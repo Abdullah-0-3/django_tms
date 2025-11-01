@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}Tasks - Task Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tasks me-2"></i>My Tasks</h2>
+    <a href="{% url 'task_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Create Task
+    </a>
+</div>
+
+<!-- Task Stage Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-secondary active" onclick="filterTasks('all')">All Tasks</button>
+            <button type="button" class="btn btn-outline-info" onclick="filterTasks('to do')">To Do</button>
+            <button type="button" class="btn btn-outline-warning" onclick="filterTasks('in progress')">In Progress</button>
+            <button type="button" class="btn btn-outline-success" onclick="filterTasks('done')">Done</button>
+        </div>
+    </div>
+</div>
+
+{% if tasks %}
+    <div class="row g-4">
+        {% for task in tasks %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm task-card" data-stage="{{ task.task_stage }}">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="badge 
+                            {% if task.task_stage == 'to do' %}bg-info
+                            {% elif task.task_stage == 'in progress' %}bg-warning
+                            {% else %}bg-success{% endif %}">
+                            {{ task.get_task_stage_display }}
+                        </span>
+                        <span class="badge 
+                            {% if task.task_priority == 'h' %}bg-danger
+                            {% elif task.task_priority == 'm' %}bg-warning
+                            {% else %}bg-secondary{% endif %}">
+                            {{ task.get_task_priority_display }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ task.title }}</h5>
+                        <p class="card-text text-muted">{{ task.description|truncatewords:15 }}</p>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-project-diagram me-1"></i>
+                                {{ task.project.title }}
+                            </small>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-comments me-1"></i>
+                                {{ task.comments.count }} comment{{ task.comments.count|pluralize }}
+                            </small>
+                        </div>
+                        
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>{{ task.created_at|date:"M d, Y" }}
+                        </small>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'task_detail' task.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <a href="{% url 'task_update' task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <a href="{% url 'task_delete' task.pk %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Tasks pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="text-center py-5">
+        <div class="card border-0">
+            <div class="card-body">
+                <i class="fas fa-tasks text-muted mb-3" style="font-size: 4rem;"></i>
+                <h4 class="text-muted">No Tasks Yet</h4>
+                <p class="text-muted mb-4">Create your first task to start managing your work.</p>
+                <a href="{% url 'task_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Create Your First Task
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+function filterTasks(stage) {
+    const cards = document.querySelectorAll('.task-card');
+    const buttons = document.querySelectorAll('.btn-group .btn');
+    
+    // Reset button states
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    cards.forEach(card => {
+        if (stage === 'all' || card.dataset.stage === stage) {
+            card.parentElement.style.display = 'block';
+        } else {
+            card.parentElement.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}
