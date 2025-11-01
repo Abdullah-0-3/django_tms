@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Task - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>Create New Task
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.project.id_for_label }}" class="form-label">Project</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-project-diagram"></i></span>
+                            {{ form.project }}
+                        </div>
+                        {% if form.project.errors %}
+                            <div class="text-danger small mt-1">{{ form.project.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Task Title</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tasks"></i></span>
+                            <input type="text" name="title" class="form-control" id="{{ form.title.id_for_label }}" required>
+                        </div>
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                        <textarea name="description" class="form-control" id="{{ form.description.id_for_label }}" rows="4"></textarea>
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">Describe the task requirements and objectives.</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.task_stage.id_for_label }}" class="form-label">Stage</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                                    {{ form.task_stage }}
+                                </div>
+                                {% if form.task_stage.errors %}
+                                    <div class="text-danger small mt-1">{{ form.task_stage.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label for="{{ form.task_priority.id_for_label }}" class="form-label">Priority</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-exclamation-circle"></i></span>
+                                    {{ form.task_priority }}
+                                </div>
+                                {% if form.task_priority.errors %}
+                                    <div class="text-danger small mt-1">{{ form.task_priority.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Create Task
+                        </button>
+                        <a href="{% url 'task_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="card mt-4 border-info">
+            <div class="card-body">
+                <h6 class="card-title text-info">
+                    <i class="fas fa-info-circle me-2"></i>About Tasks
+                </h6>
+                <p class="card-text small text-muted mb-0">
+                    Tasks help you break down project work into manageable pieces. 
+                    Set priorities and track progress through different stages.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Comment - {{ comment.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Delete Comment
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Warning!</strong> This action cannot be undone.
+                </div>
+
+                <p class="lead">Are you sure you want to delete this comment?</p>
+                
+                <!-- Comment Preview -->
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger">{{ comment.title }}</h5>
+                        <p class="card-text">{{ comment.description|truncatewords:30|default:"No additional details provided." }}</p>
+                        
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <small class="text-muted">Task:</small><br>
+                                <small><i class="fas fa-tasks me-1"></i>{{ comment.task.title }}</small>
+                            </div>
+                            <div class="col-sm-6">
+                                <small class="text-muted">Posted:</small><br>
+                                <small><i class="fas fa-calendar me-1"></i>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    This comment will be permanently removed from the task "{{ comment.task.title }}".
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Yes, Delete Comment
+                        </button>
+                        <a href="{% url 'comment_detail' comment.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

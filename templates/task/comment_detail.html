@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ comment.title }} - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-comment me-2"></i>{{ comment.title }}
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <!-- Task Context -->
+                <div class="alert alert-light border mb-4">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-tasks me-2"></i>Related Task
+                    </h6>
+                    <p class="mb-2">
+                        <a href="{% url 'task_detail' comment.task.pk %}" class="text-decoration-none fw-bold">
+                            {{ comment.task.title }}
+                        </a>
+                    </p>
+                    <small class="text-muted">
+                        <i class="fas fa-project-diagram me-1"></i>{{ comment.task.project.title }}
+                    </small>
+                </div>
+
+                <!-- Comment Content -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-2">Comment</h6>
+                    <p class="lead">{{ comment.description|default:"No additional details provided." }}</p>
+                </div>
+
+                <!-- Comment Meta -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Author</h6>
+                        <p><i class="fas fa-user me-2 text-primary"></i>{{ comment.created_by.username }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Posted</h6>
+                        <p><i class="fas fa-calendar me-2 text-primary"></i>{{ comment.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                </div>
+
+                {% if comment.updated_at != comment.created_at %}
+                    <div class="row">
+                        <div class="col-12">
+                            <h6 class="text-muted mb-2">Last Updated</h6>
+                            <p><i class="fas fa-clock me-2 text-primary"></i>{{ comment.updated_at|date:"F d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Actions -->
+                <div class="d-flex gap-2 mt-4">
+                    <a href="{% url 'task_detail' comment.task.pk %}" class="btn btn-primary">
+                        <i class="fas fa-tasks me-2"></i>View Task
+                    </a>
+                    {% if comment.created_by == request.user %}
+                        <a href="{% url 'comment_delete' comment.pk %}" class="btn btn-outline-danger">
+                            <i class="fas fa-trash me-2"></i>Delete Comment
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 text-center">
+    <a href="{% url 'comment_list' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to My Comments
+    </a>
+</div>
+{% endblock %}
