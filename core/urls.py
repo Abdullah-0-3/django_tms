@@ -27,5 +27,6 @@ urlpatterns = [
     path('auth/', include('accounts.urls')),
     path('organization/', include('organization.urls')),
     path('organization/', include('project.urls')),
+    path('organization/', include('sprint.urls')),
     path('organization/', include('task.urls')),
 ]
