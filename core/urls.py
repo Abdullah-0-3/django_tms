@@ -29,4 +29,5 @@ urlpatterns = [
     path('organization/', include('project.urls')),
     path('organization/', include('sprint.urls')),
     path('organization/', include('task.urls')),
+    path('organization/', include('sprint.urls')),
 ]
