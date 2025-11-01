@@ -66,7 +66,7 @@
                         <button type="submit" class="btn btn-secondary">
                             <i class="fas fa-save me-2"></i>Update Project
                         </button>
-                        <a href="{% url 'project_detail' project.pk %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'project_detail' project.organization.pk project.pk %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
                     </div>

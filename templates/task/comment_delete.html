@@ -49,7 +49,7 @@
                         <button type="submit" class="btn btn-danger">
                             <i class="fas fa-trash me-2"></i>Yes, Delete Comment
                         </button>
-                        <a href="{% url 'comment_detail' comment.pk %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'org_project_task_comment_detail' comment.task.project.organization.pk comment.task.project.pk comment.task.pk comment.pk %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
                     </div>

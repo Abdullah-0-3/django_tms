@@ -59,7 +59,7 @@
                         <button type="submit" class="btn btn-danger">
                             <i class="fas fa-trash me-2"></i>Yes, Delete Task
                         </button>
-                        <a href="{% url 'task_detail' task.pk %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'org_project_task_detail' task.project.organization.pk task.project.pk task.pk %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
                     </div>

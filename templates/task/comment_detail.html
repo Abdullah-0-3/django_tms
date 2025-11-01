@@ -18,7 +18,7 @@
                         <i class="fas fa-tasks me-2"></i>Related Task
                     </h6>
                     <p class="mb-2">
-                        <a href="{% url 'task_detail' comment.task.pk %}" class="text-decoration-none fw-bold">
+                        <a href="{% url 'org_project_task_detail' comment.task.project.organization.pk comment.task.project.pk comment.task.pk %}" class="text-decoration-none fw-bold">
                             {{ comment.task.title }}
                         </a>
                     </p>
@@ -56,11 +56,11 @@
 
                 <!-- Actions -->
                 <div class="d-flex gap-2 mt-4">
-                    <a href="{% url 'task_detail' comment.task.pk %}" class="btn btn-primary">
+                    <a href="{% url 'org_project_task_detail' comment.task.project.organization.pk comment.task.project.pk comment.task.pk %}" class="btn btn-primary">
                         <i class="fas fa-tasks me-2"></i>View Task
                     </a>
                     {% if comment.created_by == request.user %}
-                        <a href="{% url 'comment_delete' comment.pk %}" class="btn btn-outline-danger">
+                        <a href="{% url 'org_project_task_comment_delete' comment.task.project.organization.pk comment.task.project.pk comment.task.pk comment.pk %}" class="btn btn-outline-danger">
                             <i class="fas fa-trash me-2"></i>Delete Comment
                         </a>
                     {% endif %}
@@ -71,8 +71,8 @@
 </div>
 
 <div class="mt-4 text-center">
-    <a href="{% url 'comment_list' %}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Back to My Comments
+    <a href="{% url 'org_project_task_detail' comment.task.project.organization.pk comment.task.project.pk comment.task.pk %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Task
     </a>
 </div>
 {% endblock %}

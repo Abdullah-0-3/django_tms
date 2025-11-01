@@ -55,7 +55,7 @@
                                 <div class="card border-left-primary">
                                     <div class="card-body p-3">
                                         <h6 class="card-title">
-                                            <a href="{% url 'project_detail' project.pk %}" class="text-decoration-none">{{ project.title }}</a>
+                                            <a href="{% url 'org_project_task_list' organization.pk project.pk %}" class="text-decoration-none">{{ project.title }}</a>
                                         </h6>
                                         <p class="card-text small text-muted">{{ project.description|truncatewords:10 }}</p>
                                         <small class="text-muted">

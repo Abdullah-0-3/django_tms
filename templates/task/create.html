@@ -76,7 +76,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-2"></i>Create Task
                         </button>
-                        <a href="{% url 'task_list' %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'org_project_task_list' organization.pk project.pk %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
                     </div>

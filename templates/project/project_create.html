@@ -58,9 +58,15 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-2"></i>Create Project
                         </button>
+                        {% if organization %}
+                        <a href="{% url 'organization_detail' organization.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        {% else %}
                         <a href="{% url 'project_list' %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
+                        {% endif %}
                     </div>
                 </form>
             </div>

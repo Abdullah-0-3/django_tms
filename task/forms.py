@@ -16,9 +16,12 @@ class TaskForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        hide_project = kwargs.pop('hide_project', False)
         super().__init__(*args, **kwargs)
         if user:
             self.fields['project'].queryset = Project.objects.filter(created_by=user)
+        if hide_project:
+            del self.fields['project']
 
 class CommentForm(forms.ModelForm):
     class Meta:

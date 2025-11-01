@@ -12,10 +12,10 @@
                         <i class="fas fa-project-diagram me-2"></i>{{ project.title }}
                     </h4>
                     <div class="btn-group">
-                        <a href="{% url 'project_update' project.pk %}" class="btn btn-light btn-sm">
+                        <a href="{% url 'project_update' project.organization.pk project.pk %}" class="btn btn-light btn-sm">
                             <i class="fas fa-edit me-1"></i>Edit
                         </a>
-                        <a href="{% url 'project_delete' project.pk %}" class="btn btn-outline-light btn-sm">
+                        <a href="{% url 'project_delete' project.organization.pk project.pk %}" class="btn btn-outline-light btn-sm">
                             <i class="fas fa-trash me-1"></i>Delete
                         </a>
                     </div>
@@ -60,12 +60,12 @@
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a href="{% url 'project_update' project.pk %}" class="btn btn-outline-primary btn-sm">
+                    <a href="{% url 'project_update' project.organization.pk project.pk %}" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-edit me-2"></i>Edit Project
                     </a>
-                    <button class="btn btn-outline-success btn-sm" disabled>
+                    <a href="{% url 'org_project_task_list' project.organization.pk project.pk %}" class="btn btn-outline-success btn-sm">
                         <i class="fas fa-tasks me-2"></i>Manage Tasks
-                    </button>
+                    </a>
                     <button class="btn btn-outline-info btn-sm" disabled>
                         <i class="fas fa-users me-2"></i>Team Members
                     </button>
@@ -97,8 +97,8 @@
 </div>
 
 <div class="mt-4">
-    <a href="{% url 'project_list' %}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Back to Projects
+    <a href="{% url 'organization_detail' project.organization.pk %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Organization
     </a>
 </div>
 {% endblock %}

@@ -48,19 +48,35 @@ class ProjectDetail(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'project/project_detail.html'
     context_object_name = 'project'
+    
+    def get_object(self):
+        org = get_object_or_404(Organization, pk=self.kwargs['org_id'], created_by=self.request.user)
+        return get_object_or_404(Project, pk=self.kwargs['pk'], organization=org, created_by=self.request.user)
 
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = 'project/project_update.html'
-    success_url = reverse_lazy('project_list')
+    
+    def get_object(self):
+        org = get_object_or_404(Organization, pk=self.kwargs['org_id'], created_by=self.request.user)
+        return get_object_or_404(Project, pk=self.kwargs['pk'], organization=org, created_by=self.request.user)
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+    
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'org_id': self.kwargs['org_id'], 'pk': self.object.pk})
 
 class ProjectDelete(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'project/project_delete.html'
-    success_url = reverse_lazy('project_list')
+    
+    def get_object(self):
+        org = get_object_or_404(Organization, pk=self.kwargs['org_id'], created_by=self.request.user)
+        return get_object_or_404(Project, pk=self.kwargs['pk'], organization=org, created_by=self.request.user)
+    
+    def get_success_url(self):
+        return reverse_lazy('organization_detail', kwargs={'pk': self.kwargs['org_id']})
