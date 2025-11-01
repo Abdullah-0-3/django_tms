@@ -40,7 +40,7 @@ class DetailSprint(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['organization'] = self.object.project.organization
         context['project'] = self.object.project
-        context['sprint_tasks'] = self.object.tasks.all()
+        context['sprint_tasks'] = self.object.tasks.filter(created_by=self.request.user)
         return context
 
 class CreateSprint(LoginRequiredMixin, CreateView):

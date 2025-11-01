@@ -14,6 +14,7 @@
             <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
+                    {% if form.project %}
                     <div class="mb-3">
                         <label for="{{ form.project.id_for_label }}" class="form-label">Project</label>
                         <div class="input-group">
@@ -24,12 +25,25 @@
                             <div class="text-danger small mt-1">{{ form.project.errors.0 }}</div>
                         {% endif %}
                     </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.sprint.id_for_label }}" class="form-label">Sprint</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-running"></i></span>
+                            {{ form.sprint }}
+                        </div>
+                        {% if form.sprint.errors %}
+                            <div class="text-danger small mt-1">{{ form.sprint.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">Optional: Assign task to a sprint or leave in backlog.</div>
+                    </div>
 
                     <div class="mb-3">
                         <label for="{{ form.title.id_for_label }}" class="form-label">Task Title</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-tasks"></i></span>
-                            <input type="text" name="title" class="form-control" id="{{ form.title.id_for_label }}" required>
+                            {{ form.title }}
                         </div>
                         {% if form.title.errors %}
                             <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
@@ -38,7 +52,7 @@
 
                     <div class="mb-3">
                         <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
-                        <textarea name="description" class="form-control" id="{{ form.description.id_for_label }}" rows="4"></textarea>
+                        {{ form.description }}
                         {% if form.description.errors %}
                             <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
                         {% endif %}
@@ -76,7 +90,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-2"></i>Create Task
                         </button>
-                        <a href="{% url 'org_project_task_list' organization.pk project.pk %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'org_project_tasks' organization.pk project.pk %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
                     </div>
@@ -92,7 +106,7 @@
                 </h6>
                 <p class="card-text small text-muted mb-0">
                     Tasks help you break down project work into manageable pieces. 
-                    Set priorities and track progress through different stages.
+                    Assign to sprints for organized iterations or keep in backlog.
                 </p>
             </div>
         </div>

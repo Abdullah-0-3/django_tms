@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} Tasks - Task Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tasks me-2"></i>{{ project.title }} Tasks</h2>
+    <a href="{% url 'org_project_task_create' organization.pk project.pk %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Create Task
+    </a>
+</div>
+
+<!-- Task Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="mb-2">Task Type</h6>
+                <div class="btn-group" role="group">
+                    <a href="?filter=all&stage={{ current_stage }}" class="btn {% if current_filter == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm">
+                        All ({{ all_count }})
+                    </a>
+                    <a href="?filter=regular&stage={{ current_stage }}" class="btn {% if current_filter == 'regular' %}btn-info{% else %}btn-outline-info{% endif %} btn-sm">
+                        Regular ({{ regular_count }})
+                    </a>
+                    <a href="?filter=sprint&stage={{ current_stage }}" class="btn {% if current_filter == 'sprint' %}btn-success{% else %}btn-outline-success{% endif %} btn-sm">
+                        Sprint ({{ sprint_count }})
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6 class="mb-2">Task Stage</h6>
+                <div class="btn-group" role="group">
+                    <a href="?filter={{ current_filter }}&stage=all" class="btn {% if current_stage == 'all' %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm">
+                        All Stages
+                    </a>
+                    <a href="?filter={{ current_filter }}&stage=to do" class="btn {% if current_stage == 'to do' %}btn-info{% else %}btn-outline-info{% endif %} btn-sm">
+                        To Do ({{ todo_count }})
+                    </a>
+                    <a href="?filter={{ current_filter }}&stage=in progress" class="btn {% if current_stage == 'in progress' %}btn-warning{% else %}btn-outline-warning{% endif %} btn-sm">
+                        In Progress ({{ inprogress_count }})
+                    </a>
+                    <a href="?filter={{ current_filter }}&stage=done" class="btn {% if current_stage == 'done' %}btn-success{% else %}btn-outline-success{% endif %} btn-sm">
+                        Done ({{ done_count }})
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if tasks %}
+    <div class="row g-4">
+        {% for task in tasks %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="badge {% if task.task_stage == 'to do' %}bg-info{% elif task.task_stage == 'in progress' %}bg-warning{% else %}bg-success{% endif %}">
+                            {{ task.get_task_stage_display }}
+                        </span>
+                        <span class="badge {% if task.task_priority == 'h' %}bg-danger{% elif task.task_priority == 'm' %}bg-warning{% else %}bg-secondary{% endif %}">
+                            {{ task.get_task_priority_display }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ task.title }}</h5>
+                        <p class="card-text text-muted">{{ task.description|truncatewords:15 }}</p>
+                        
+                        {% if task.sprint %}
+                            <div class="mb-2">
+                                <small class="text-success">
+                                    <i class="fas fa-running me-1"></i>
+                                    <a href="{% url 'org_project_sprint_detail' organization.pk project.pk task.sprint.pk %}" class="text-decoration-none">
+                                        {{ task.sprint.name }}
+                                    </a>
+                                </small>
+                            </div>
+                        {% else %}
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-circle me-1"></i>Regular Task
+                                </small>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-comments me-1"></i>
+                                {{ task.comments.count }} comment{{ task.comments.count|pluralize }}
+                            </small>
+                        </div>
+                        
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>{{ task.created_at|date:"M d, Y" }}
+                        </small>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'org_project_task_detail' organization.pk project.pk task.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <a href="{% url 'org_project_task_update' organization.pk project.pk task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <a href="{% url 'org_project_task_delete' organization.pk project.pk task.pk %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <nav aria-label="Tasks pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&filter={{ current_filter }}&stage={{ current_stage }}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&filter={{ current_filter }}&stage={{ current_stage }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&filter={{ current_filter }}&stage={{ current_stage }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&filter={{ current_filter }}&stage={{ current_stage }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="text-center py-5">
+        <div class="card border-0">
+            <div class="card-body">
+                <i class="fas fa-tasks text-muted mb-3" style="font-size: 4rem;"></i>
+                <h4 class="text-muted">No Tasks Found</h4>
+                <p class="text-muted mb-4">
+                    {% if current_filter == 'sprint' %}
+                        No sprint tasks found. Tasks are automatically assigned to sprints when created within a sprint.
+                    {% elif current_filter == 'regular' %}
+                        No regular tasks found. Create tasks that are not part of any sprint.
+                    {% else %}
+                        No tasks found for this project.
+                    {% endif %}
+                </p>
+                <a href="{% url 'org_project_task_create' organization.pk project.pk %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Create Task
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="mt-4">
+    <a href="{% url 'project_detail' organization.pk project.pk %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Project
+    </a>
+</div>
+{% endblock %}
