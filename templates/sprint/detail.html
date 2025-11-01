@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ sprint.name }} - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-running me-2"></i>{{ sprint.name }}
+                    </h4>
+                    <div class="btn-group">
+                        <a href="{% url 'org_project_sprint_update' organization.pk project.pk sprint.pk %}" class="btn btn-light btn-sm">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'org_project_sprint_delete' organization.pk project.pk sprint.pk %}" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <span class="badge {% if sprint.is_active %}bg-success{% else %}bg-secondary{% endif %} fs-6 mb-3">
+                        <i class="fas fa-circle me-1"></i>{% if sprint.is_active %}Active Sprint{% else %}Inactive Sprint{% endif %}
+                    </span>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-muted mb-2">Description</h6>
+                    <p class="lead">{{ sprint.description|default:"No description provided." }}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Project</h6>
+                        <p><i class="fas fa-project-diagram me-2 text-primary"></i>{{ project.title }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Created By</h6>
+                        <p><i class="fas fa-user me-2 text-primary"></i>{{ sprint.created_by.username }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">Start Date</h6>
+                        <p><i class="fas fa-calendar-alt me-2 text-primary"></i>{{ sprint.start_date|date:"F d, Y" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-2">End Date</h6>
+                        <p><i class="fas fa-calendar-check me-2 text-primary"></i>{{ sprint.end_date|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sprint Tasks -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Sprint Tasks ({{ sprint_tasks.count }})</h5>
+            </div>
+            <div class="card-body">
+                {% if sprint_tasks %}
+                    <div class="row g-3">
+                        {% for task in sprint_tasks %}
+                            <div class="col-md-6">
+                                <div class="card border-left-primary">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="card-title mb-0">
+                                                <a href="{% url 'org_project_task_detail' organization.pk project.pk task.pk %}" class="text-decoration-none">{{ task.title }}</a>
+                                            </h6>
+                                            <span class="badge {% if task.task_stage == 'done' %}bg-success{% elif task.task_stage == 'in progress' %}bg-warning{% else %}bg-info{% endif %} ms-2">
+                                                {{ task.get_task_stage_display }}
+                                            </span>
+                                        </div>
+                                        <p class="card-text small text-muted">{{ task.description|truncatewords:10 }}</p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ task.created_at|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-tasks text-muted mb-3" style="font-size: 3rem;"></i>
+                        <h6 class="text-muted">No Tasks in Sprint</h6>
+                        <p class="text-muted mb-3">Tasks can be assigned to this sprint when creating or editing them.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'org_project_sprint_update' organization.pk project.pk sprint.pk %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit me-2"></i>Edit Sprint
+                    </a>
+                    <a href="{% url 'org_project_task_create' organization.pk project.pk %}" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-plus me-2"></i>Add Task
+                    </a>
+                    <a href="{% url 'project_detail' organization.pk project.pk %}" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-project-diagram me-2"></i>View Project
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sprint Stats -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Sprint Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h4 class="text-primary mb-0">{{ sprint_tasks.count }}</h4>
+                            <small class="text-muted">Tasks</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success mb-0">
+                            {% widthratio sprint_tasks|length sprint_tasks.count 100 %}%
+                        </h4>
+                        <small class="text-muted">Complete</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'org_project_sprint_list' organization.pk project.pk %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Sprints
+    </a>
+</div>
+{% endblock %}
