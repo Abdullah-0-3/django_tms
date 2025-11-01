@@ -30,3 +30,15 @@ urlpatterns = [
     path('organization/', include('sprint.urls')),
     path('organization/', include('task.urls')),
 ]
+
+# Error handlers
+handler400 = 'core.views.handler400'
+handler401 = 'core.views.handler401'
+handler403 = 'core.views.handler403'
+handler404 = 'core.views.handler404'
+handler405 = 'core.views.handler405'
+handler429 = 'core.views.handler429'
+handler500 = 'core.views.handler500'
+handler502 = 'core.views.handler502'
+handler503 = 'core.views.handler503'
+handler504 = 'core.views.handler504'
