@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Role - {{ organization.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-tag me-2"></i>Create New Role for {{ organization.name }}
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Role Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                    {{ form.name }}
+                                </div>
+                                {% if form.name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.role_type.id_for_label }}" class="form-label">Role Type</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+                                    {{ form.role_type }}
+                                </div>
+                                {% if form.role_type.errors %}
+                                    <div class="text-danger small mt-1">{{ form.role_type.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">Describe what this role can do in the organization.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Permissions</label>
+                        <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                            {% if form.permissions %}
+                                {{ form.permissions }}
+                            {% else %}
+                                <p class="text-muted mb-0">No permissions available. Create permissions first.</p>
+                            {% endif %}
+                        </div>
+                        {% if form.permissions.errors %}
+                            <div class="text-danger small mt-1">{{ form.permissions.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">Select the permissions this role should have.</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Create Role
+                        </button>
+                        <a href="{% url 'organization_roles' organization.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

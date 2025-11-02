@@ -91,6 +91,15 @@
                     <a href="{% url 'organization_update' organization.pk %}" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-edit me-2"></i>Edit Organization
                     </a>
+                    <a href="{% url 'organization_members' organization.pk %}" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-users me-2"></i>Manage Members
+                    </a>
+                    <a href="{% url 'invite_user' organization.pk %}" class="btn btn-outline-warning btn-sm">
+                        <i class="fas fa-user-plus me-2"></i>Invite User
+                    </a>
+                    <a href="{% url 'organization_roles' organization.pk %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-user-tag me-2"></i>Manage Roles
+                    </a>
                     <a href="{% url 'project_create_for_org' organization.pk %}" class="btn btn-outline-success btn-sm">
                         <i class="fas fa-plus me-2"></i>Add Project
                     </a>

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ organization.name }} Members - Task Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-users me-2"></i>{{ organization.name }} Members</h2>
+    <a href="{% url 'invite_user' organization.pk %}" class="btn btn-primary">
+        <i class="fas fa-user-plus me-2"></i>Invite User
+    </a>
+</div>
+
+<!-- Pending Invitations -->
+{% if pending_invitations %}
+<div class="card mb-4 border-warning">
+    <div class="card-header bg-warning text-dark">
+        <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Pending Invitations</h6>
+    </div>
+    <div class="card-body">
+        {% for invitation in pending_invitations %}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+                <strong>{{ invitation.email }}</strong>
+                <span class="badge bg-secondary ms-2">{{ invitation.role.name }}</span>
+            </div>
+            <small class="text-muted">Invited {{ invitation.created_at|timesince }} ago</small>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Active Members -->
+<div class="card">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-users me-2"></i>Active Members ({{ memberships.count }})</h6>
+    </div>
+    <div class="card-body">
+        {% if memberships %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for membership in memberships %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user-circle text-primary me-2"></i>
+                                    <div>
+                                        <strong>{{ membership.user.username }}</strong>
+                                        <br><small class="text-muted">{{ membership.user.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge {% if membership.role.role_type == 'lead' %}bg-danger{% elif membership.role.role_type == 'admin' %}bg-warning{% elif membership.role.role_type == 'member' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                    {{ membership.role.name }}
+                                </span>
+                            </td>
+                            <td>{{ membership.joined_at|date:"M d, Y" }}</td>
+                            <td>
+                                <span class="badge {% if membership.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ membership.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-users text-muted mb-3" style="font-size: 3rem;"></i>
+                <h6 class="text-muted">No Members Yet</h6>
+                <p class="text-muted mb-3">Invite users to join this organization.</p>
+                <a href="{% url 'invite_user' organization.pk %}" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>Invite User
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'organization_detail' organization.pk %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Organization
+    </a>
+</div>
+{% endblock %}
