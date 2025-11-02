@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from .rbac_models import OrganizationRole, Permission, RolePermission
+from .models import OrganizationRole, Permission, RolePermission
 
 User = get_user_model()
 

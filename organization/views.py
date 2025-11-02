@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Organization
 from .forms import OrganizationForm
-from .rbac_models import OrganizationRole, Permission, OrganizationMembership
+from .models import OrganizationRole, Permission, OrganizationMembership
 
 class OrganizationCreateView(LoginRequiredMixin, CreateView):
     model = Organization

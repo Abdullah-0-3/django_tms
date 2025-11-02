@@ -8,8 +8,8 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from datetime import timedelta
 from .models import Organization
-from .rbac_models import OrganizationRole, Permission, RolePermission, OrganizationMembership, OrganizationInvitation
-from .forms import InviteUserForm, RoleForm, PermissionForm
+from .models import OrganizationRole, Permission, RolePermission, OrganizationMembership, OrganizationInvitation
+from .rbac_forms import InviteUserForm, RoleForm, PermissionForm
 
 User = get_user_model()
 
