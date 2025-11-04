@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from organization import views
 
 urlpatterns = [
@@ -6,4 +6,5 @@ urlpatterns = [
     path('<int:pk>/', views.OrganizationDetailView.as_view(), name='organization_detail'),
     path('<int:pk>/update/', views.OrganizationUpdateView.as_view(), name='organization_update'),
     path('', views.OrganizationListView.as_view(), name='organization_list'),
+    path('', include('organization.rbac.urls')),
 ]
