@@ -1,5 +1,5 @@
 from django import forms
-from .models import Invitation, OrganizationMember
+from organization.models import Invitation, OrganizationMember
 
 class InvitationForm(forms.ModelForm):
     class Meta:

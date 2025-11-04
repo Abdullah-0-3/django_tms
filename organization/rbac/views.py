@@ -4,8 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.urls import reverse
-from organization.models import Organization
-from .models import Invitation, OrganizationMember
+from organization.models import Organization, Invitation, OrganizationMember
 from .forms import InvitationForm
 
 User = get_user_model()
@@ -29,6 +28,19 @@ def invite_user(request, org_id):
     return render(request, 'organization/rbac/invite.html', {
         'form': form,
         'organization': organization
+    })
+
+@login_required
+def invitation_detail(request, invitation_id):
+    invitation = get_object_or_404(Invitation, id=invitation_id, status='pending')
+    
+    # Check if the current user's email matches the invitation
+    if request.user.email != invitation.email:
+        messages.error(request, 'This invitation is not for your email address.')
+        return redirect('organization_list')
+    
+    return render(request, 'organization/rbac/invitation_detail.html', {
+        'invitation': invitation
     })
 
 @login_required
@@ -88,4 +100,11 @@ def organization_members(request, org_id):
         'members': members,
         'pending_invitations': pending_invitations,
         'is_owner': organization.created_by == request.user
+    })
+
+@login_required
+def my_invitations(request):
+    invitations = Invitation.objects.filter(email=request.user.email, status='pending')
+    return render(request, 'organization/rbac/my_invitations.html', {
+        'invitations': invitations
     })

@@ -2,9 +2,8 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import Q
-from .models import Organization
+from .models import Organization, OrganizationMember
 from .forms import OrganizationForm
-from .rbac.models import OrganizationMember
 
 class OrganizationCreateView(LoginRequiredMixin, CreateView):
     model = Organization
